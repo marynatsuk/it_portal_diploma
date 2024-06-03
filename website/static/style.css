@@ -1,1 +1,702 @@
+/* ===== Google Font Import - Poppins ===== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
 
+:root{
+    /* ===== Colors ===== */
+    --primary-color: #06ba63;
+    --panel-color: #1D5E3C;
+    --text-color: #000;
+    --background-color: #ffff;
+    --border-color: #b3b5bb;
+    --nav-bar-links: #fff;
+    --search-field-color:#e4e6ec;
+    
+    /* --black-light-color: #fff; */
+    /* --border-color: #e6e5e5; */
+    /* --toggle-color: #DDD; */
+    /* --title-icon-color: #fff; */
+    
+    /* ====== Transition ====== */
+    --tran-05: all 0.5s ease;
+    --tran-03: all 0.3s ease;
+    --tran-03: all 0.2s ease;
+}
+
+body{
+    min-height: 100vh;
+    background-color: var(--primary-color);
+}
+
+/* === Custom Scroll Bar CSS === */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--panel-color)
+}
+
+/* NAV BAR */
+nav{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding: 10px 14px;
+    background-color: var(--panel-color);
+    border-right: 1px solid var(--border-color);
+    transition: var(--tran-05);
+}
+nav.close{
+    width: 73px;
+}
+nav .logo-name{
+    display: flex;
+    align-items: center;
+}
+nav .logo-image{
+    display: flex;
+    justify-content: center;
+    min-width: 70px;
+}
+nav .logo-image img{
+    width: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+nav .logo-name .logo_name{
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--nav-bar-links);
+    margin-left: 50px;
+    margin-top: 10px;
+    transition: var(--tran-05);
+}
+nav.close .logo_name{
+    opacity: 0;
+    pointer-events: none;
+}
+nav .menu-items{
+    margin-top: 40px;
+    height: calc(100% - 90px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+nav.close li a .link-name{
+    opacity: 0;
+    pointer-events: none;
+}
+.nav-links li a:hover i,
+.nav-links li a:hover .link-name{
+    color: var(--primary-color);
+}
+
+/* MENU ITEMS */
+.menu-items li{
+    list-style: none;
+}
+.menu-items li a{
+    display: flex;
+    align-items: center;
+    height: 50px;
+    text-decoration: none;
+    position: relative;
+}
+.nav-links li a:hover:before{
+    content: "";
+    position: absolute;
+    left: -7px;
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+}
+.menu-items li a i{
+    font-size: 24px;
+    min-width: 45px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nav-bar-links);
+}
+.menu-items li a .link-name{
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--nav-bar-links);    
+    transition: var(--tran-05);
+}
+.menu-items .logout-mode{
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+
+.dashboard{
+    position: relative;
+    left: 250px;
+    background-color: var(--background-color);
+    min-height: 100vh;
+    width: calc(100% - 250px);
+    padding: 10px 14px;
+    transition: var(--tran-05);
+}
+nav.close ~ .dashboard{
+    left: 73px;
+    width: calc(100% - 73px);
+}
+.dashboard .top{
+    position: fixed;
+    top: 0;
+    left: 250px;
+    display: flex;
+    width: calc(100% - 250px);
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background-color: var(--panel-color);
+    transition: var(--tran-05);
+    z-index: 10;
+}
+nav.close ~ .dashboard .top{
+    left: 73px;
+    width: calc(100% - 73px);
+}
+.dashboard .top .sidebar-toggle{
+    font-size: 26px;
+    color: var(--nav-bar-links);
+    cursor: pointer;
+}
+.dashboard .top .search-box{
+    position: relative;
+    height: 45px;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 30px;
+}
+.top .search-box input{
+    position: absolute;
+    border: 1px solid var(--border-color);
+    background-color: var(--search-field-color);
+    padding: 0 25px 0 50px;
+    border-radius: 5px;
+    height: 100%;
+    width: 100%;
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: 400;
+    outline: none;
+}
+.top .search-box i{
+    position: absolute;
+    left: 15px;
+    font-size: 22px;
+    z-index: 10;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-color);
+}
+.top img{
+    width: 40px;
+    border-radius: 50%;
+}
+
+.dashboard .dash-content{
+    padding-top: 50px;
+}
+.dash-content .title{
+    display: flex;
+    align-items: center;
+    margin: 60px 0 30px 0;
+}
+.dash-content .title i{
+    position: relative;
+    height: 35px;
+    width: 35px;
+    background-color: var(--primary-color);
+    border-radius: 6px;
+    color: var(--title-icon-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+.dash-content .title .text{
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-left: 10px;
+}
+.dash-content .boxes{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+
+.dash-content .activity .activity-data{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-top: 20px;
+}
+
+.activity-data table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.activity-data th,
+.activity-data td {
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+.activity-data th {
+    background-color: #f2f2f2;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.activity-data td {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-color);
+    text-align: center; /* Align content in the middle */
+    vertical-align: middle; /* Vertically center content */
+}
+
+.activity-data td form,
+.activity-data td a {
+    display: inline-block; /* Ensure buttons are displayed as blocks */
+}
+.activity-data td form button:hover,
+/* .activity-data td a:hover {
+    color: var(--panel-color); /* Change background color on hover 
+} */
+
+
+.activity-data th,
+.activity-data td:first-child {
+    white-space: nowrap;
+}
+
+.activity-data tr:nth-child(even) {
+    background-color: #f2f2f2; /* Grey background color */
+}
+
+
+/* Style for rectangular buttons */
+.rectangular-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color); /* Replace with your primary color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none; /* Remove default underline */
+    transition: background-color 0.3s ease;
+}
+
+.rectangular-button:hover {
+    background-color: var(--panel-color); /* Change color on hover if desired */
+}
+
+/* Style for rectangular form inputs */
+.rectangular-input {
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Style for rectangular form */
+.rectangular-form {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f2f2f2; /* Light gray background color */
+    border-radius: 5px;
+}
+
+.filter-section {
+    display: flex;
+}
+
+.filter-column {
+    flex: 1;
+    padding: 20px 20px 0; /* Adjust top padding as needed */
+}
+
+
+/* Adjust alignment of labels */
+.filter-column label {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    margin-bottom: 5px; /* Adjust as needed */
+}
+
+.filter-column input[type="checkbox"] {
+    margin-right: 5px; /* Add space between checkbox and label */
+}
+
+/* Form container */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Divide into two columns */
+    grid-gap: 20px; /* Gap between grid items */
+}
+
+/* Left column */
+.left-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Right column */
+.right-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Form title */
+.form-title {
+    grid-column: 1 / -1; /* Span across both columns */
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Form group */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Label styles */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#tasktypeworker {
+    list-style-type: disc; /* Set the bullet style */
+    margin-left: 20px; /* Add some left margin for indentation */
+}
+
+/* Input styles */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.large-input {
+    height: 200px;
+    padding: 10px;
+    text-indent: 0; /* Move the cursor to the top left corner */
+    resize: none; /* Prevent resizing */
+}
+
+
+
+/* Select styles */
+select.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.button-group {
+    margin-top: auto; /* Push the button container to the bottom of the column */
+}
+
+/* Button styles */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: var(--primary-color); /* Light green */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background-color: var(--panel-color); /* Dark green on hover */
+}
+
+.btn-cancel {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #ddd; /* Grey */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 10px; /* Adjust as needed */
+}
+
+.btn-cancel:hover {
+    background-color: #ccc; /* Darker grey on hover */
+}
+
+.disabled-button {
+    /* Add your styles for the disabled button */
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.right-column .column-title {
+    font-size: 20px;
+}
+
+.faq-item {
+    background-color: #f0f0f0; /* Light grey background */
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: center; /* Center the question text */
+    cursor: pointer;
+}
+
+.faq-item:hover {
+    background-color: #e0e0e0; /* Darker grey on hover */
+}
+
+.faq-item .question {
+    font-weight: bold; /* Bold text for question */
+    margin-bottom: 10px; /* Spacing below the question */
+}
+
+.faq-item .answer {
+    display: none; /* Hide answer by default */
+    padding: 10px;
+    background-color: #f9f9f9; /* Light background for answer */
+}
+
+/* Styles for entries-control and pagination-control */
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.entries-control {
+    font-size: 18px;
+}
+
+.entries-control select {
+    margin-left: 10px;
+    font-size: 16px;
+    padding: 5px;
+}
+
+.pagination-control {
+    font-size: 18px;
+}
+
+.pagination-button {
+    background-color: var(--primary-color); /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 2px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.pagination-button:hover {
+    background-color: var(--panel-color); /* Dark green on hover */
+}
+
+.pagination-button:disabled {
+    background-color: #A5D6A7; /* Lighter green */
+    cursor: not-allowed;
+}
+
+.pagination-control span {
+    margin: 0 10px;
+}
+
+.flash-message {
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: #FFC107; /* Yellow background color */
+    color: #333; /* Text color */
+    font-size: 16px;
+    text-align: center;
+}
+.dismiss-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    font-size: inherit;
+    margin-left: 10px;
+}
+
+/* Flash message styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    position: relative;
+    color: white;
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0.7); /* Default background color */
+}
+
+.alert-dismissible .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+}
+
+/* Background colors for different categories with transparency */
+.alert-success {
+    background-color: rgba(0, 128, 0, 0.7); /* Green with transparency */
+}
+
+.alert-error {
+    background-color: rgba(255, 0, 0, 0.7); /* Red with transparency */
+}
+
+
+@media (max-width: 1000px) {
+    nav{
+        width: 73px;
+    }
+    nav.close{
+        width: 250px;
+    }
+    nav .logo_name{
+        opacity: 0;
+        pointer-events: none;
+    }
+    nav.close .logo_name{
+        opacity: 1;
+        pointer-events: auto;
+    }
+    nav li a .link-name{
+        opacity: 0;
+        pointer-events: none;
+    }
+    nav.close li a .link-name{
+        opacity: 1;
+        pointer-events: auto;
+    }
+    nav ~ .dashboard{
+        left: 73px;
+        width: calc(100% - 73px);
+    }
+    nav.close ~ .dashboard{
+        left: 250px;
+        width: calc(100% - 250px);
+    }
+    nav ~ .dashboard .top{
+        left: 73px;
+        width: calc(100% - 73px);
+    }
+    nav.close ~ .dashboard .top{
+        left: 250px;
+        width: calc(100% - 250px);
+    }
+    .activity .activity-data{
+        overflow-X: scroll;
+    }
+}
+
+@media (max-width: 400px) {
+    nav{
+        width: 0px;
+    }
+    nav.close{
+        width: 73px;
+    }
+    nav .logo_name{
+        opacity: 0;
+        pointer-events: none;
+    }
+    nav.close .logo_name{
+        opacity: 0;
+        pointer-events: none;
+    }
+    nav li a .link-name{
+        opacity: 0;
+        pointer-events: none;
+    }
+    nav.close li a .link-name{
+        opacity: 0;
+        pointer-events: none;
+    }
+    nav ~ .dashboard{
+        left: 0;
+        width: 100%;
+    }
+    nav.close ~ .dashboard{
+        left: 73px;
+        width: calc(100% - 73px);
+    }
+    nav ~ .dashboard .top{
+        left: 0;
+        width: 100%;
+    }
+    nav.close ~ .dashboard .top{
+        left: 0;
+        width: 100%;
+    }
+}
