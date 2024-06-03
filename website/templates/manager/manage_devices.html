@@ -1,0 +1,126 @@
+{% extends "manager/manager_dashboard.html" %} {% block title %}New request{%
+endblock %} {% block content %}
+<div class="top">
+    <i class="uil uil-bars sidebar-toggle"></i>
+    <div class="search-box">
+        <i class="uil uil-search"></i>
+        <input type="text" placeholder="Search device connection here..." />
+    </div>
+</div>
+<br />
+<br />
+<div id="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <br />
+    {% for category, message in messages %}
+    <div class="alert {{ 'alert-' + category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+</div>
+<div class="activity">
+    <div class="filter-section">
+        <div class="filter-column">
+            <h3>Filter by Type:</h3>
+            {% for devicetype in devicetypes %}
+            <label>
+                <input type="checkbox" class="devicetype-filter" value="{{ devicetype.name }}" />{{ devicetype.name }}
+            </label>
+            {% endfor %}
+        </div>
+        <div class="filter-column">
+            <h3>Filter by Brand:</h3>
+            {% for devicebrand in devicebrands %}
+            <label>
+                <input type="checkbox" class="brand-filter" value="{{ devicebrand.name }}" />{{ devicebrand.name }}
+            </label>
+            {% endfor %}
+        </div>
+
+        <div class="filter-column">
+            <h3>Filter by Status:</h3>
+            {% for status in statuses %}
+            <label>
+                <input type="checkbox" class="status-filter" value="{{ status }}" />{{
+                status }}
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+    <br />
+    <a href="{{ url_for('manager_views.add_new_device') }}" class="rectangular-button">Add a new device</a>
+    <a href="{{ url_for('manager_views.view_devices_list') }}" class="rectangular-button">View devices list</a>
+    <div class="activity-data">
+        <div class="controls">
+            <div class="entries-control">
+                <label for="entriesSelect">Show
+                <select id="entriesSelect">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="all">All</option>
+                </select>
+                entries</label>
+            </div>
+            <div class="pagination-control">
+                <button id="firstPage" class="pagination-button">
+                    <i class="uil uil-previous"></i>
+                </button>
+                <button id="prevPage" class="pagination-button">
+                    <i class="uil uil-arrow-left"></i>
+                </button>
+                <span id="pageNumber">1</span>
+                <button id="nextPage" class="pagination-button">
+                    <i class="uil uil-arrow-right"></i>
+                </button>
+                <button id="lastPage" class="pagination-button">
+                    <i class="uil uil-step-forward"></i>
+                </button>
+            </div>
+        </div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="0">ID</th>
+                    <th class="sortable" data-column="1">Device name</th>
+                    <th class="sortable" data-column="2">Type</th>
+                    <th class="sortable" data-column="3">Brand</th>
+                    <th class="sortable" data-column="4">Serial number</th>
+                    <th class="sortable" data-column="5">Status</th>
+                    <th class="sortable" data-column="6">Recieved by</th>
+                    <th class="sortable" data-column="7">Received at</th>
+                    <th class="sortable" data-column="8">Returned at</th>
+                </tr>
+            </thead>
+            <tbody id="managerDeviceTableBody">
+                {% for device_worker in device_workers %}
+                <tr>
+                    <td>{{ device_worker.id }}</td>
+                    <td>{{ device_worker.device.device_name }}</td>
+                    <td>{{ device_worker.device.device_type.name }}</td>
+                    <td>{{ device_worker.device.device_brand.name }}</td>
+                    <td>{{ device_worker.device.serial_number }}</td>
+                    <td>{{ device_worker.status }}</td>
+                    <td>
+                        {% if device_worker.worker.status == 'active' %}
+                        <a href="{{ url_for('manager_views.view_profile', user_id=device_worker.worker.id) }}">
+                            {{ device_worker.worker.first_name }} {{
+                            device_worker.worker.last_name }}
+                        </a>
+                        {% else %} {{ device_worker.worker.first_name }} {{
+                        device_worker.worker.last_name }} {% endif %}
+                    </td>
+                    <td>{{ device_worker.received_date }}</td>
+                    <td>{{ device_worker.returned_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

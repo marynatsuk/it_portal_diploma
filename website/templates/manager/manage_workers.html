@@ -1,0 +1,115 @@
+{% extends "manager/manager_dashboard.html" %}
+{% block title %}Manage workers{% endblock %}
+
+{% block content %}
+<div class="top">
+    <i class="uil uil-bars sidebar-toggle"></i>
+    <div class="search-box">
+        <i class="uil uil-search"></i>
+        <input type="text" placeholder="Search worker here...">
+    </div>
+</div>
+<br>
+<br>
+
+<div id="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <br>
+    {% for category, message in messages %}
+
+    <div class="alert {{ 'alert-' + category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+</div>
+<div class="activity">
+    <div class="filter-section">
+        <div class="filter-column">
+            <h3>Filter by Responsibilities:</h3>
+            {% for tasktype in tasktypes %}
+            <label>
+                <input type="checkbox" class="tasktype-filter" value="{{ tasktype.name }}">{{ tasktype.name }}
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="activity-data">
+        <div class="controls">
+            <div class="entries-control">
+                <label for="entriesSelect">Show
+                <select id="entriesSelect">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="all">All</option>
+                </select>
+                 entries</label>
+            </div>
+            <div class="pagination-control">
+                <button id="firstPage" class="pagination-button">
+                    <i class="uil uil-previous"></i>
+                </button>
+                <button id="prevPage" class="pagination-button">
+                    <i class="uil uil-arrow-left"></i>
+                </button>
+                <span id="pageNumber">1</span>
+                <button id="nextPage" class="pagination-button">
+                    <i class="uil uil-arrow-right"></i>
+
+                </button>
+                <button id="lastPage" class="pagination-button">
+                    <i class="uil uil-step-forward"></i>
+                </button>
+            </div>
+        </div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="0">ID</th>
+                    <th class="sortable" data-column="1">First Name</th>
+                    <th class="sortable" data-column="2">Last Name</th>
+                    <th class="sortable" data-column="4">Email</th>
+                    <th class="sortable" data-column="5">Phone</th>
+                    <th class="sortable" data-column="7">Title</th>
+                    <th> Responsibilities </th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody id="managerWorkerTableBody">
+                {% for user, department_name, role_name in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.title }}</td>
+                    <td>
+                        {% set user_responsibilities = [] %}
+                        {% for responsibility in responsibilities %}
+                        {% if responsibility.worker_id == user.id %}
+                        {% set user_responsibilities = user_responsibilities.append(responsibility.tasktype.name) %}
+                        {% endif %}
+
+                        {% endfor %}
+                        {{ ', '.join(user_responsibilities) }}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('manager_views.edit_profile', user_id=user.id) }}"
+                            class="rectangular-button">Edit</a>
+                    </td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

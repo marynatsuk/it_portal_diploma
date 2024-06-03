@@ -1,0 +1,95 @@
+{% extends "manager/manager_dashboard.html" %}
+{% block title %}Request info{% endblock %}
+
+{% block content %}
+<div class="top">
+    <i class="uil uil-bars sidebar-toggle"></i>
+
+</div>
+<br>
+<br>
+<form method="POST" class="form-container">
+
+    <h3 class="form-title">Request Information</h3>
+    <div class="right-column">
+        <div class="form-group">
+            <label for="taskText">Task Text:</label>
+            <span id="taskText">{{ task.text }}</span>
+        </div>
+
+        {% if task.status != "Completed" %}
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{{ url_for('manager_views.manager_dashboard') }}" class="btn btn-cancel">Cancel</a>
+        </div>
+        {% endif %}
+
+        {% if task.status == "Completed" %}
+        <div class="button-group">
+            <a href="{{ url_for('manager_views.manager_dashboard') }}" class="btn btn-cancel">Go to dashboard</a>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <div class="left-column">
+        <div class="form-group">
+            <label for="createdBy">Created by:</label>
+            <a href="{{ url_for('manager_views.view_profile', user_id=task.created_by_worker.id) }}">{{
+                task.created_by_worker.first_name }} {{ task.created_by_worker.last_name }}</a>
+        </div>
+
+        <div class="form-group">
+            <label for="createdAt">Created at:</label>
+            <span id="createdAt">{{ task.created_time }}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <span id="status">{{ task.status }}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="worker">Worker:</label>
+            <select id="worker" name="worker" class="form-control" {% if task.status=="Completed" %} disabled {% endif
+                %} required>
+                <option value="" disabled>Select worker</option>
+                {% for worker in workers %}
+                {% if worker.id == task.worker_id %}
+                <option value="{{ worker.id }}" selected>{{ worker.last_name }} {{ worker.first_name }}</option>
+                {% else %}
+                <option value="{{ worker.id }}">{{ worker.last_name }} {{ worker.first_name }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="completionTime">Completion time:</label>
+            <span id="completionTime">{{ task.completed_time }}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="taskType">Task type:</label>
+            <select id="taskType" name="taskType" class="form-control" {% if task.status=="Completed" %} disabled {%
+                endif %} required>
+                <option value="" disabled>Select task type</option>
+                {% for tasktype in tasktypes %}
+                {% if tasktype.id == task.type_id %}
+                <option value="{{ tasktype.id }}" selected>{{ tasktype.name }}</option>
+                {% else %}
+                <option value="{{ tasktype.id }}">{{ tasktype.name }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+
+    </div>
+</form>
+
+
+
+
+
+{% endblock %}

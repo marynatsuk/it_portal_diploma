@@ -1,0 +1,76 @@
+{% extends "manager/manager_dashboard.html" %}
+{% block title %}Manager profile{% endblock %}
+
+{% block content %}
+<div class="top">
+    <i class="uil uil-bars sidebar-toggle"></i>
+</div>
+<br>
+<br>
+
+<div id="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <br>
+    {% for category, message in messages %}
+    <div class="alert {{ 'alert-' + category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+</div>
+<form method="POST" class="form-container">
+    <h3 class="form-title">My profile </h3>
+    <div class="left-column">
+
+        <div class="form-group">
+            <label for="userName">User name:</label>
+            <span id="userName">{{ user.first_name }} {{user.last_name}}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="department">Department:</label>
+            <span id="department">{{ user.department.name }}</span>
+        </div>
+
+        <h3 class="column-title"> Change personal info:</h3>
+
+        <div class="form-group">
+            <label for="email"> Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter new email" />
+        </div>
+        <div class="form-group">
+            <label for="phone"> Phone</label>
+            <input type="phone" class="form-control" id="phone" name="phone" placeholder="Enter new phone number" />
+        </div>
+
+    </div>
+
+    <div class="right-column">
+        <h3> Contact information</h3>
+
+        <div class="form-group">
+            <label for="phoneNumber">Phone number:</label>
+            <span id="phoneNumber">{{ user.phone }}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <span id="email">{{ user.email }}</span>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary" class="btn btn-primary"> Submit </button>
+            <a href="{{ url_for('manager_views.manager_profile') }}" class="btn btn-cancel">Cancel</a>
+
+        </div>
+
+    </div>
+    </div>
+</form>
+
+{% endblock %}
