@@ -1,1 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+
+    <title> {% block title %}Admin Dashboard{% endblock %} </title>
+</head>
+
+<body>
+    <nav>
+        <div class="logo-name">
+            <span class="logo_name"> IT portal </span>
+        </div>
+
+        <div class="menu-items">
+            <ul class="nav-links">
+                <li><a href="/admin_dashboard">
+                        <i class="uil uil-check"></i>
+                        <span class="link-name"> All users </span>
+                    </a></li>
+                <li><a href="/create_user">
+                        <i class="uil uil-laptop"></i>
+                        <span class="link-name"> Create a new user </span>
+                    </a></li>
+            </ul>
+
+            <ul class="logout-mod">
+                <li><a href="/logout">
+                        <i class="uil uil-signout"></i>
+                        <span class="link-name"> Sign out</span>
+                    </a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="dashboard">
+
+        {% block content %}
+
+        <div class="top">
+            <i class="uil uil-bars sidebar-toggle"></i>
+            <div class="search-box">
+                <i class="uil uil-search"></i>
+                <input type="text" placeholder="Search user here...">
+            </div>
+        </div>
+        <br>
+        <br>
+
+
+        <div id="flash-messages">
+            <br>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert {{ 'alert-' + category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="activity">
+            <div class="filter-section">
+                <div class="filter-column">
+                    <h3>Filter by Department:</h3>
+                    {% for department in departments %}
+                    <label>
+                        <input type="checkbox" class="department-filter" value="{{ department.name }}">{{
+                        department.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+                <div class="filter-column">
+                    <h3>Filter by Role:</h3>
+                    {% for role in roles %}
+                    <label>
+                        <input type="checkbox" class="role-filter" value="{{ role.name }}">{{ role.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+            <div class="activity-data">
+                <div class="controls">
+                    <div class="entries-control">
+                        <label for="entriesSelect">Show
+                        <select id="entriesSelect">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="all">All</option>
+                        </select>
+                        entries</label>
+                    </div>
+                    <div class="pagination-control">
+                        <button id="firstPage" class="pagination-button">
+                            <i class="uil uil-previous"></i>
+                        </button>
+                        <button id="prevPage" class="pagination-button">
+                            <i class="uil uil-arrow-left"></i>
+                        </button>
+                        <span id="pageNumber">1</span>
+                        <button id="nextPage" class="pagination-button">
+                            <i class="uil uil-arrow-right"></i>
+
+                        </button>
+                        <button id="lastPage" class="pagination-button">
+                            <i class="uil uil-step-forward"></i>
+                        </button>
+                    </div>
+                </div>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-column="0">ID</th>
+                            <th class="sortable" data-column="1">First Name</th>
+                            <th class="sortable" data-column="2">Last Name</th>
+                            <th class="sortable" data-column="3">Username</th>
+                            <th class="sortable" data-column="4">Email</th>
+                            <th class="sortable" data-column="5">Phone</th>
+                            <th class="sortable department">Department</th>
+                            <th class="sortable" data-column="6">Title</th>
+                            <th class="sortable role">Role</th>
+                            <th>Action</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminUserTable">
+                        {% for user, department_name, role_name in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.first_name }}</td>
+                            <td>{{ user.last_name }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.phone }}</td>
+                            <td class="department">{{ department_name }}</td>
+                            <td>{{ user.title }}</td>
+                            <td class="role">{{ role_name }}</td>
+
+                            <td>
+                                <form action="{{ url_for('admin_views.delete_user', user_id=user.id) }}" method="post">
+                                    <button
+                                        class="rectangular-button {% if user.status == 'inactive' %}disabled-button{% endif %}"
+                                        type="submit" {% if user.status=='inactive' %}disabled{% endif
+                                        %}>Unactivate</button>
+                                </form>
+                            </td>
+
+                            <td>
+                                <a href="{{ url_for('admin_views.edit_user', user_id=user.id) }}"
+                                    class="rectangular-button {% if user.status == 'inactive' %}disabled-button{% endif %}"
+                                    {% if user.status=='inactive' %}disabled{% endif %}>Edit</a>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <br>
+
+            </div>
+            {% endblock %}
+        </div>
+    </section>
+    <script src="{{url_for('static', filename='script.js')}}"></script>
+    <script src="{{url_for('static', filename='admin_script.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
