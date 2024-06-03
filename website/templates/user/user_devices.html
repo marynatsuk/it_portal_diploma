@@ -1,0 +1,125 @@
+{% extends "user/user_dashboard.html" %} {% block title %}User devices{%
+endblock %} {% block content %}
+<div class="top">
+    <i class="uil uil-bars sidebar-toggle"></i>
+    <div class="search-box">
+        <i class="uil uil-search"></i>
+        <input type="text" placeholder="Search device here..." />
+    </div>
+</div>
+<br />
+<br />
+
+<div class="activity">
+    <div class="filter-section">
+        <div class="filter-column">
+            <h3>Filter by Type:</h3>
+            {% for devicetype in devicetypes %}
+            <label>
+                <input type="checkbox" class="devicetype-filter" value="{{ devicetype.name }}" />{{ devicetype.name }}
+            </label>
+            {% endfor %}
+        </div>
+        <div class="filter-column">
+            <h3>Filter by Brand:</h3>
+            {% for devicebrand in devicebrands %}
+            <label>
+                <input type="checkbox" class="brand-filter" value="{{ devicebrand.name }}" />{{ devicebrand.name }}
+            </label>
+            {% endfor %}
+        </div>
+
+        <div class="filter-column">
+            <h3>Filter by Device Status:</h3>
+            {% for status in statuses %}
+            <label>
+                <input type="checkbox" class="status-filter" value="{{ status }}" />{{
+                status }}
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{{ url_for('user_views.request_new_device') }}" class="rectangular-button">Request a new device</a>
+    <div class="activity-data">
+        <div class="controls">
+            <div class="entries-control">
+                <label for="entriesSelect">Show 
+                <select id="entriesSelect">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="all">All</option>
+                </select>
+                entries</label>
+            </div>
+            <div class="pagination-control">
+                <button id="firstPage" class="pagination-button">
+                    <i class="uil uil-previous"></i>
+                </button>
+                <button id="prevPage" class="pagination-button">
+                    <i class="uil uil-arrow-left"></i>
+                </button>
+                <span id="pageNumber">1</span>
+                <button id="nextPage" class="pagination-button">
+                    <i class="uil uil-arrow-right"></i>
+                </button>
+                <button id="lastPage" class="pagination-button">
+                    <i class="uil uil-step-forward"></i>
+                </button>
+            </div>
+        </div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="0">ID</th>
+                    <th class="sortable" data-column="1">Device name</th>
+                    <th class="sortable" data-column="2">Type</th>
+                    <th class="sortable" data-column="3">Brand</th>
+                    <th class="sortable" data-column="4">Serial number</th>
+                    <th class="sortable" data-column="5">Status</th>
+                    <!-- <th class="sortable" data-column="5">Device</th> -->
+                    <th class="sortable" data-column="6">Received at</th>
+                    <th class="sortable" data-column="7">Returned at</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="userDeviceTableBody">
+                {% for user_device in user_devices %}
+                <tr>
+                    <td>{{ user_device.id }}</td>
+                    <td>{{ user_device.device.device_name }}</td>
+                    <td>{{ user_device.device.device_type.name }}</td>
+                    <td>{{ user_device.device.device_brand.name }}</td>
+                    <td>{{ user_device.device.serial_number }}</td>
+                    <td>{{ user_device.status }}</td>
+                    <!-- <td>{{ user_device.device.status }}</td> -->
+                    <td>{{ user_device.received_date }}</td>
+                    <td>{{ user_device.returned_date }}</td>
+                    <td>
+                        <form action="{{ url_for('user_views.confirm_device', device_id=user_device.device_id) }}"
+                            method="post">
+                            <button type="submit"
+                                class="btn btn-primary {% if user_device.status !='Processing' %} disabled-button{% endif %}"
+                                {% if user_device.status !="Processing" %}disabled{% endif %}>
+                                Confirm delivery
+                            </button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{{ url_for('user_views.return_device', device_id=user_device.device_id) }}"
+                            method="post">
+                            <button type="submit"
+                                class="btn btn-primary {% if user_device.status !='In progress'%}disabled-button{% endif %}"
+                                {% if user_device.status !="In progress" %}disabled{% endif %}>
+                                Return Device
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

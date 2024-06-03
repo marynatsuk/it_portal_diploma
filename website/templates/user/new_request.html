@@ -1,0 +1,27 @@
+{% extends "user/user_dashboard.html" %} {% block title %}New request{% endblock
+%} {% block content %}
+<div class="top">
+    <i class="uil uil-bars sidebar-toggle"></i>
+</div>
+<br />
+<br />
+
+<form method="POST" class="form-container">
+    <h3 class="form-title">New request</h3>
+    <div class="left-column">
+        <div class="form-group">
+            <label for="newRequest"> What is your request? </label>
+            <textarea type="text" class="form-control large-input" id="newRequest" name="newRequest"
+                placeholder="Enter your request">
+      </textarea>
+        </div>
+    </div>
+
+    <div class="right-column">
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{{ url_for('user_views.new_request') }}" class="btn btn-cancel">Cancel</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

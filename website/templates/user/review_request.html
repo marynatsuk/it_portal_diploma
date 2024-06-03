@@ -1,0 +1,78 @@
+{% extends "user/user_dashboard.html" %}
+{% block title %}Review request{% endblock %}
+
+{% block content %}
+<div class="top">
+    <i class="uil uil-bars sidebar-toggle"></i>
+</div>
+<br>
+<br>
+<form method="POST" class="form-container">
+    <h3 class="form-title">Request Info</h3>
+
+    <div class="right-column">
+        <div class="form-group">
+            <label for="taskText">Task Text:</label>
+            <span id="taskText">{{ task.text }}</span>
+        </div>
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select id="status" name="status" class="form-control" {% if task.status=='Completed' %} disabled {% endif
+                %}>
+                {% for status in statuses %}
+                <option value="{{ status }}" {% if status==task.status %} selected {% endif %}>{{ status }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="completionTime">Completion time:</label>
+            <span id="completionTime">{{ task.completed_time }}</span>
+        </div>
+        <div class="button-group">
+            <button type="submit"
+                class="btn btn-primary  {% if task.status == 'Completed' %} disabled-button{% endif %}" {% if
+                task.status=='Completed' %} disabled {% endif %}> Submit</button>
+        </div>
+    </div>
+
+    <div class="left-column">
+        <div class="form-group">
+            <label for="taskType">Task Type:</label>
+            <span id="taskType">{{ task.task_type.name }}</span>
+        </div>
+        <div class="form-group">
+            <label for="createdBy">Created by:</label>
+            <td>
+                {% if task.created_by_worker.status == 'active' %}
+                <a href="{{ url_for('user_views.view_profile', user_id=task.created_by_worker.id) }}">
+                    {{ task.created_by_worker.first_name }} {{ task.created_by_worker.last_name }}
+                </a>
+                {% else %}
+                {{ task.created_by_worker.first_name }} {{ task.created_by_worker.last_name }}
+                {% endif %}
+            </td>
+        </div>
+        <div class="form-group">
+            <label for="createdAt">Created at :</label>
+            <span id="createdAt">{{ task.created_time }}</span>
+        </div>
+        <div class="form-group">
+            <label for="manager">Manager:</label>
+            <td>
+                {% if task.manager.status == 'active' %}
+                <a href="{{ url_for('user_views.view_profile', user_id=task.manager.id) }}">
+                    {{ task.manager.last_name}} {{ task.manager.first_name }}
+                </a>
+                {% else %}
+                {{ task.manager.last_name}} {{ task.manager.first_name }}
+                {% endif %}
+            </td>
+        </div>
+        <div class="button-group">
+            <a href="{{ url_for('user_views.user_dashboard') }}" class="btn btn-cancel">Cancel</a>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

@@ -1,1 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="stylesheet" href="/website/templates/style.css" type="text/css">
+
+    <title> {% block title %}User Dashboard{% endblock %} </title>
+</head>
+
+<body>
+    <nav>
+        <div class="logo-name">
+            <span class="logo_name"> IT portal </span>
+        </div>
+        <div class="menu-items">
+            <ul class="nav-links">
+                <li><a href="/user/dashboard">
+                        <i class="uil uil-check"></i>
+                        <span class="link-name"> My tasks </span>
+                    </a></li>
+                <li><a href="/user/user_devices">
+                        <i class="uil uil-laptop"></i>
+                        <span class="link-name"> My devices</span>
+                    </a></li>
+                <br>
+                <li><a href="/user/new_request">
+                        <i class="uil uil-envelope-upload"></i>
+                        <span class="link-name"> Create a request </span>
+                    </a></li>
+                <li><a href="/user/user_requests">
+                        <i class="uil uil-user-check"></i>
+                        <span class="link-name"> My requests</span>
+                    </a></li>
+
+            </ul>
+            <ul class="logout-mod">
+                <li><a href="/user/profile">
+                        <i class="uil uil-user-circle"></i>
+                        <span class="link-name"> My profile</span>
+                    </a></li>
+                <li><a href="/user/questions">
+                        <i class="uil uil-comment-question"></i>
+                        <span class="link-name"> FAQ</span>
+                    </a></li>
+                <li><a href="/logout">
+                        <i class="uil uil-signout"></i>
+                        <span class="link-name"> Sign out</span>
+                    </a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="dashboard">
+        {% block content %}
+        <div class="top">
+            <i class="uil uil-bars sidebar-toggle"></i>
+            <div class="search-box">
+                <i class="uil uil-search"></i>
+                <input type="text" placeholder="Search task here...">
+            </div>
+        </div>
+        <br>
+        <br>
+
+        <div id="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <br>
+            {% for category, message in messages %}
+            <div class="alert {{ 'alert-' + category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="activity">
+            <div class="filter-section">
+                <div class="filter-column">
+                    <h3>Filter by Task Type:</h3>
+                    {% for tasktype in tasktypes %}
+                    <label>
+                        <input type="checkbox" class="type-filter" value="{{ tasktype.name }}">{{ tasktype.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+                <div class="filter-column">
+                    <h3>Filter by Status:</h3>
+                    {% for status in statuses %}
+                    <label>
+                        <input type="checkbox" class="status-filter" value="{{ status }}">{{ status }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="activity-data">
+                <div class="controls">
+                    <div class="entries-control">
+                        <label for="entriesSelect">Show
+                        <select id="entriesSelect">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="all">All</option>
+                        </select>
+                        entries</label>
+                    </div>
+                    <div class="pagination-control">
+                        <button id="firstPage" class="pagination-button">
+                            <i class="uil uil-previous"></i>
+                        </button>
+                        <button id="prevPage" class="pagination-button">
+                            <i class="uil uil-arrow-left"></i>
+                        </button>
+                        <span id="pageNumber">1</span>
+                        <button id="nextPage" class="pagination-button">
+                            <i class="uil uil-arrow-right"></i>
+
+                        </button>
+                        <button id="lastPage" class="pagination-button">
+                            <i class="uil uil-step-forward"></i>
+                        </button>
+                    </div>
+                </div>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-column="0">ID</th>
+                            <th class="sortable" data-column="1">Request text</th>
+                            <th class="sortable" data-column="2">Task type</th>
+                            <th class="sortable" data-column="3">Created by</th>
+                            <th class="sortable" data-column="4">Created at</th>
+                            <th class="sortable" data-column="5">Manager</th>
+                            <th class="sortable" data-column="6">Task status</th>
+                            <th class="sortable" data-column="7">Completed at</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        {% for task in tasks %}
+                        <tr>
+                            <td>{{ task.id }}</td>
+                            <td>{{ task.text }}</td>
+                            <td>{{ task.task_type.name }}</td>
+                            <td>
+                                {% if task.created_by_worker.status == 'active' %}
+                                <a href="{{ url_for('user_views.view_profile', user_id=task.created_by_worker.id) }}">
+                                    {{ task.created_by_worker.last_name }} {{ task.created_by_worker.first_name }}</a>
+                                {% else %}
+                                {{ task.created_by_worker.last_name }} {{ task.created_by_worker.first_name }}
+                                {% endif %}
+                            </td>
+                            <td>{{ task.created_time }}</td>
+                            <td>
+                                {% if task.manager.status == 'active' %}
+                                <a href="{{ url_for('user_views.view_profile', user_id=task.manager.id) }}">{{
+                                    task.manager.last_name }} {{ task.manager.first_name }}</a>
+                                {% else %}
+                                {{ task.manager.last_name }} {{ task.manager.first_name }}
+                                {% endif %}
+                            </td>
+
+                            <td>{{ task.status }}</td>
+                            <td>{{ task.completed_time }}</td>
+                            <td>
+                                <form action="{{ url_for('user_views.review_request', task_id=task.id) }}"
+                                    method="post">
+                                    <button type="submit" class="rectangular-button">Review</button>
+                                </form>
+                            </td>
+                            <td>
+                                {% if task.status == 'Not started' %}
+                                <form action="{{ url_for('user_views.reassign_request', task_id=task.id) }}"
+                                    method="post">
+                                    <button type="submit" class="rectangular-button">Reassign</button>
+                                </form>
+                                {% else %}
+                                <button type="button" class="rectangular-button disabled-button"
+                                    disabled>Reassign</button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endblock %}
+        </div>
+        </section>
+        <script src="{{url_for('static', filename='script.js')}}"></script>
+        <script src="{{url_for('static', filename='user_script.js')}}"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</body>
+
+</html>

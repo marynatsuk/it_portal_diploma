@@ -1,0 +1,118 @@
+{% extends "user/user_dashboard.html" %} {% block title %}My requests{% endblock
+%} {% block content %}
+<div class="top">
+    <i class="uil uil-bars sidebar-toggle"></i>
+    <div class="search-box">
+        <i class="uil uil-search"></i>
+        <input type="text" placeholder="Search request connection here..." />
+    </div>
+</div>
+<br />
+<br />
+
+<div id="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <br />
+    {% for category, message in messages %}
+    <div class="alert {{ 'alert-' + category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+</div>
+<div class="activity">
+    <div class="filter-section">
+        <div class="filter-column">
+            <h3>Filter by Status:</h3>
+            {% for status in statuses %}
+            <label>
+                <input type="checkbox" class="status-filter" value="{{ status }}" />{{
+                status }}
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="activity-data">
+        <div class="controls">
+            <div class="entries-control">
+                <label for="entriesSelect">Show
+                <select id="entriesSelect">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="all">All</option>
+                </select>
+                entries</label>
+            </div>
+            <div class="pagination-control">
+                <button id="firstPage" class="pagination-button">
+                    <i class="uil uil-previous"></i>
+                </button>
+                <button id="prevPage" class="pagination-button">
+                    <i class="uil uil-arrow-left"></i>
+                </button>
+                <span id="pageNumber">1</span>
+                <button id="nextPage" class="pagination-button">
+                    <i class="uil uil-arrow-right"></i>
+                </button>
+                <button id="lastPage" class="pagination-button">
+                    <i class="uil uil-step-forward"></i>
+                </button>
+            </div>
+        </div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="0">ID</th>
+                    <th class="sortable" data-column="1">Request text</th>
+                    <th class="sortable" data-column="2">Created at</th>
+                    <th class="sortable" data-column="3">Status</th>
+                    <th class="sortable" data-column="4">Completed at</th>
+                    <th class="sortable" data-column="5">Worker</th>
+                    <th class="sortable" data-column="6">Manager</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="userRequestsTableBody">
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.id }}</td>
+                    <td>{{ task.text }}</td>
+                    <td>{{ task.created_time }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>{{ task.completed_time }}</td>
+                    <td>
+                        {% if task.worker.status == 'active' %}
+                        <a href="{{ url_for('user_views.view_profile', user_id=task.worker.id) }}">
+                            {{ task.worker.last_name }} {{ task.worker.first_name }}
+                        </a>
+                        {% else %} {{ task.worker.last_name }} {% endif %}
+                    </td>
+                    <td>
+                        {% if task.manager.status == 'active' %}
+                        <a href="{{ url_for('user_views.view_profile', user_id=task.manager.id) }}">
+                            {{ task.manager.last_name }} {{ task.manager.first_name }}
+                        </a>
+                        {% else %} {{ task.manager.last_name }} {{ task.manager.first_name
+                        }} {% endif %}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('user_views.delete_request', task_id=task.id) }}" method="post">
+                            <button type="submit"
+                                class="rectangular-button {% if task.status !='Not started' %} disabled-button {% endif %}"
+                                {% if task.status !="Not started" %} disabled {% endif %}>
+                                DELETE
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% endblock %}
+    </div>
+</div>
